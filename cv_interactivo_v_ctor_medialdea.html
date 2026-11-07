@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Víctor Medialdea Mozos - Portfolio de Ingeniería Biomédica</title>
+    <!-- Tailwind CSS para el diseño responsivo y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de Tailwind para colores personalizados -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b1120',
+                        darkCard: '#1e293b',
+                        cyanAccent: '#06b6d4',
+                        blueAccent: '#3b82f6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Efectos de cristal (Glassmorphism) */
+        .glass-nav {
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            transition: all 0.4s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Animaciones de Scroll (Reveal) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Efecto texto degradado */
+        .text-gradient {
+            background: linear-gradient(90deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Canvas de fondo */
+        #network-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Timeline de experiencia */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem; /* -28px */
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            background-color: #06b6d4;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #06b6d4;
+            z-index: 10;
+        }
+        .timeline-border {
+            position: absolute;
+            left: 0.75rem;
+            top: 1rem;
+            bottom: -2rem;
+            width: 2px;
+            background: linear-gradient(to bottom, #06b6d4, rgba(6, 182, 212, 0.1));
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyanAccent selection:text-white">
+
+    <!-- Navegación Fija -->
+    <nav class="glass-nav fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="#hero" class="text-2xl font-bold text-gradient tracking-tighter">VMM<span class="text-white text-sm font-normal tracking-normal ml-2 font-mono">Biomedical</span></a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#hero" class="text-gray-300 hover:text-cyanAccent transition px-3 py-2 rounded-md text-sm font-medium">Sobre Mí</a>
+                        <a href="#experiencia-clinica" class="text-gray-300 hover:text-cyanAccent transition px-3 py-2 rounded-md text-sm font-medium">Clínica</a>
+                        <a href="#proyectos" class="text-gray-300 hover:text-cyanAccent transition px-3 py-2 rounded-md text-sm font-medium">Proyectos</a>
+                        <a href="#habilidades" class="text-gray-300 hover:text-cyanAccent transition px-3 py-2 rounded-md text-sm font-medium">Skills</a>
+                        <a href="#educacion" class="text-gray-300 hover:text-cyanAccent transition px-3 py-2 rounded-md text-sm font-medium">Educación</a>
+                    </div>
+                </div>
+                <!-- Menú móvil (simplificado) -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" class="text-gray-400 hover:text-white inline-flex items-center justify-center p-2 rounded-md focus:outline-none" aria-controls="mobile-menu" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                        <span class="sr-only">Abrir menú principal</span>
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Menú Móvil Desplegable -->
+        <div class="md:hidden hidden bg-darkBg border-b border-gray-800" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#hero" class="text-gray-300 hover:text-cyanAccent block px-3 py-2 rounded-md text-base font-medium">Sobre Mí</a>
+                <a href="#experiencia-clinica" class="text-gray-300 hover:text-cyanAccent block px-3 py-2 rounded-md text-base font-medium">Clínica (Da Vinci)</a>
+                <a href="#proyectos" class="text-gray-300 hover:text-cyanAccent block px-3 py-2 rounded-md text-base font-medium">Proyectos</a>
+                <a href="#habilidades" class="text-gray-300 hover:text-cyanAccent block px-3 py-2 rounded-md text-base font-medium">Skills</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section / Header Inmersivo -->
+    <header id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Canvas para partículas interactivas -->
+        <canvas id="network-canvas"></canvas>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto reveal active">
+            
+            <div class="inline-block mb-4 px-3 py-1 rounded-full border border-cyanAccent/30 bg-cyanAccent/10 text-cyanAccent text-sm font-mono tracking-wide mt-8">
+                Ingeniería para la Salud
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+                Víctor Medialdea <span class="text-gradient">Mozos</span>
+            </h1>
+            <h2 class="text-xl md:text-3xl text-gray-400 font-light mb-10">
+                Estudiante de Ingeniería Biomédica
+            </h2>
+
+            <!-- Tarjeta Sobre Mí integrada en el Hero -->
+            <div class="glass-card p-8 md:p-10 rounded-2xl relative overflow-hidden group border-t-4 border-t-cyanAccent max-w-3xl mx-auto mb-12 shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_30px_rgba(6,182,212,0.25)] transition-all">
+                <i class="fas fa-heartbeat text-3xl text-cyanAccent mb-4 opacity-80"></i>
+                <p class="text-lg md:text-xl text-gray-300 leading-relaxed italic font-light">
+                    "Orientar mi carrera profesional en el campo de las ciencias experimentales, cursando el grado de ingeniería biomédica, me llevará a desarrollar y crear productos que mejorarán la calidad de vida de las personas. Con ello podré alcanzar mi verdadera vocación que es la de ayudar a los demás. ¡Estoy donde quería estar, más cerca que nunca de lograrlo!"
+                </p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a href="#experiencia-clinica" class="bg-cyanAccent hover:bg-cyan-500 text-darkBg font-semibold px-8 py-3 rounded-full transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                    Ver Experiencia
+                </a>
+                <a href="#proyectos" class="border border-gray-600 hover:border-gray-400 text-white px-8 py-3 rounded-full transition-all">
+                    Proyectos
+                </a>
+            </div>
+        </div>
+        
+        <!-- Flecha de scroll -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-500">
+            <a href="#experiencia-clinica"><i class="fas fa-chevron-down text-2xl hover:text-cyanAccent transition-colors"></i></a>
+        </div>
+    </header>
+
+    <!-- Sección Experiencia Clínica -->
+    <section id="experiencia-clinica" class="py-24 bg-darkBg relative z-10 overflow-hidden">
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-5xl h-full bg-blueAccent/5 blur-[100px] rounded-full z-0 pointer-events-none"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div class="flex flex-col items-center mb-16 reveal text-center">
+                <div class="inline-block mb-4 px-4 py-1 rounded-full border border-cyanAccent/50 bg-cyanAccent/10 text-cyanAccent text-sm font-bold tracking-wide uppercase shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+                    Experiencia Clínica Destacada
+                </div>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Hospital Quirónsalud</h2>
+                <p class="text-gray-400 max-w-3xl text-lg">Prácticas Clínicas (Julio - Agosto 2026) | Inmersión técnica en el entorno hospitalario.</p>
+            </div>
+            
+            <div class="glass-card rounded-3xl p-1 relative overflow-hidden group reveal shadow-[0_0_25px_rgba(6,182,212,0.3)] border border-cyanAccent hover:shadow-[0_0_40px_rgba(6,182,212,0.5)] transition-all duration-500">
+                <div class="absolute inset-0 bg-gradient-to-r from-blueAccent/10 to-cyanAccent/10 opacity-50"></div>
+                <div class="bg-darkCard rounded-[1.4rem] p-8 md:p-12 relative z-10 flex flex-col md:flex-row gap-10 items-center">
+                    
+                    <div class="w-full md:w-1/3 flex flex-col items-center text-center">
+                        <div class="w-32 h-32 rounded-full border-4 border-cyanAccent/20 flex items-center justify-center mb-6 bg-slate-800 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                            <i class="fas fa-robot text-5xl text-cyanAccent"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Cirugía Robótica</h3>
+                        <p class="text-blueAccent font-medium mb-1">Sistema Da Vinci</p>
+                    </div>
+
+                    <div class="w-full md:w-2/3 border-t md:border-t-0 md:border-l border-gray-700 pt-8 md:pt-0 md:pl-10">
+                        <div class="mb-8">
+                            <div class="flex items-center gap-3 mb-3">
+                                <i class="fas fa-eye text-cyanAccent text-xl"></i>
+                                <h4 class="text-xl font-semibold text-white">Quirófano: Da Vinci y Cirugía Protésica</h4>
+                            </div>
+                            <p class="text-gray-300 leading-relaxed">
+                                Asistencia en quirófano observando cirugías robóticas operadas con el avanzado sistema Da Vinci, así como asistencia en intervenciones de cirugía general y procedimientos de implantación protésica. Análisis de telemanipulación de precisión, cinemática de los brazos robóticos, e integración de la interfaz máquina-cirujano en entornos críticos.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <i class="fas fa-x-ray text-blueAccent text-xl"></i>
+                                <h4 class="text-xl font-semibold text-white">Diagnóstico por Imagen</h4>
+                            </div>
+                            <p class="text-gray-300 leading-relaxed">
+                                Rotación intensiva en la operativa de equipos de alta complejidad: <strong>Tomografía Axial Computarizada (TAC)</strong>, <strong>Resonancia Magnética (RM)</strong> y <strong>Rayos X</strong>. Familiarización con protocolos de adquisición e imagenología médica.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Proyectos de Ingeniería -->
+    <section id="proyectos" class="py-24 bg-slate-900/50 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-4 mb-12 reveal">
+                <div class="h-1 w-12 bg-cyanAccent rounded"></div>
+                <h2 class="text-3xl md:text-4xl font-bold">Proyectos de Ingeniería</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
+                
+                <!-- Proyecto 1: TOCO -->
+                <div class="glass-card rounded-2xl overflow-hidden group flex flex-col h-full hover:shadow-[0_10px_30px_rgba(6,182,212,0.2)]">
+                    <div class="h-48 bg-gradient-to-br from-slate-800 to-slate-900 relative flex items-center justify-center border-b border-gray-700 overflow-hidden">
+                        <i class="fas fa-wifi text-6xl text-cyanAccent opacity-50 group-hover:scale-110 transition-transform duration-500"></i>
+                        <div class="absolute bottom-3 left-3 bg-darkBg/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-mono text-cyanAccent border border-cyanAccent/30">IoT & Hardware</div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="text-xl font-bold text-white mb-3">Monitorización Fetal IoT (Sensor TOCO)</h3>
+                        <p class="text-gray-400 text-sm mb-4 flex-1">
+                            Desarrollo de un tocodinamómetro inalámbrico de bajo consumo. Utiliza células de carga para la medición precisa de contracciones uterinas y transmite datos en tiempo real mediante conexión Wi-Fi y protocolo MQTT.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-2 py-1 bg-gray-800 rounded text-xs text-gray-300">Células de carga</span>
+                            <span class="px-2 py-1 bg-gray-800 rounded text-xs text-gray-300">Wi-Fi/MQTT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyecto 2: VR -->
+                <div class="glass-card rounded-2xl overflow-hidden group flex flex-col h-full hover:shadow-[0_10px_30px_rgba(59,130,246,0.2)]">
+                    <div class="h-48 bg-gradient-to-br from-slate-800 to-slate-900 relative flex items-center justify-center border-b border-gray-700 overflow-hidden">
+                        <i class="fas fa-vr-cardboard text-6xl text-blueAccent opacity-50 group-hover:scale-110 transition-transform duration-500"></i>
+                        <div class="absolute bottom-3 left-3 bg-darkBg/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-mono text-blueAccent border border-blueAccent/30">Realidad Virtual</div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="text-xl font-bold text-white mb-3">Laboratorio Inmersivo VR</h3>
+                        <p class="text-gray-400 text-sm mb-4 flex-1">
+                            Creación de un entorno virtual de medicina regenerativa. Integración del manejo simulado de un brazo robótico mediante XR Interaction Toolkit, mejorando el entrenamiento médico a través de la simulación espacial.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-2 py-1 bg-gray-800 rounded text-xs text-gray-300">Unity 3D</span>
+                            <span class="px-2 py-1 bg-gray-800 rounded text-xs text-gray-300">XR Interaction</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyecto 3: 3D -->
+                <div class="glass-card rounded-2xl overflow-hidden group flex flex-col h-full hover:shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
+                    <div class="h-48 bg-gradient-to-br from-slate-800 to-slate-900 relative flex items-center justify-center border-b border-gray-700 overflow-hidden">
+                        <i class="fas fa-cube text-6xl text-emerald-400 opacity-50 group-hover:scale-110 transition-transform duration-500"></i>
+                        <div class="absolute bottom-3 left-3 bg-darkBg/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-mono text-emerald-400 border border-emerald-400/30">Biomecánica</div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="text-xl font-bold text-white mb-3">Diseño Biomecánico 3D</h3>
+                        <p class="text-gray-400 text-sm mb-4 flex-1">
+                            Modelado avanzado orientado a soluciones ortopédicas. Incluye el diseño y optimización de un clavo intramedular de titanio para fracturas, y el desarrollo de una mascarilla nasal deportiva protectora en PETG.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-2 py-1 bg-gray-800 rounded text-xs text-gray-300">Autodesk Fusion</span>
+                            <span class="px-2 py-1 bg-gray-800 rounded text-xs text-gray-300">Titanio / PETG</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Habilidades Técnicas -->
+    <section id="habilidades" class="py-24 bg-darkBg relative z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center mb-12 reveal text-center">
+                <div class="h-1 w-12 bg-cyanAccent rounded mb-6"></div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Habilidades Técnicas</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
+                
+                <!-- IoMT & Hardware -->
+                <div class="glass-card p-8 rounded-2xl border-l-4 border-l-cyanAccent hover:bg-cyanAccent/5 transition-colors">
+                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        <i class="fas fa-microchip text-cyanAccent"></i> IoMT & Hardware
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-darkBg border border-cyanAccent/30 rounded-full text-sm text-cyanAccent font-mono shadow-[0_0_10px_rgba(6,182,212,0.1)]">Sensores IoT</span>
+                        <span class="px-4 py-2 bg-darkBg border border-cyanAccent/30 rounded-full text-sm text-cyanAccent font-mono shadow-[0_0_10px_rgba(6,182,212,0.1)]">Células de Carga</span>
+                        <span class="px-4 py-2 bg-darkBg border border-cyanAccent/30 rounded-full text-sm text-cyanAccent font-mono shadow-[0_0_10px_rgba(6,182,212,0.1)]">Wi-Fi & MQTT</span>
+                        <span class="px-4 py-2 bg-darkBg border border-cyanAccent/30 rounded-full text-sm text-cyanAccent font-mono shadow-[0_0_10px_rgba(6,182,212,0.1)]">Microcontroladores</span>
+                    </div>
+                </div>
+
+                <!-- Programación -->
+                <div class="glass-card p-8 rounded-2xl border-l-4 border-l-blueAccent hover:bg-blueAccent/5 transition-colors">
+                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        <i class="fas fa-code text-blueAccent"></i> Programación
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-darkBg border border-blueAccent/30 rounded-full text-sm text-blue-400 font-mono"><i class="fab fa-python mr-2"></i>Python</span>
+                        <span class="px-4 py-2 bg-darkBg border border-blueAccent/30 rounded-full text-sm text-blue-400 font-mono">C / C++</span>
+                        <span class="px-4 py-2 bg-darkBg border border-blueAccent/30 rounded-full text-sm text-blue-400 font-mono">MATLAB</span>
+                        <span class="px-4 py-2 bg-darkBg border border-blueAccent/30 rounded-full text-sm text-blue-400 font-mono">R</span>
+                        <span class="px-4 py-2 bg-darkBg border border-blueAccent/30 rounded-full text-sm text-blue-400 font-mono">MongoDB</span>
+                    </div>
+                </div>
+
+                <!-- Diseño 3D & VR -->
+                <div class="glass-card p-8 rounded-2xl border-l-4 border-l-emerald-400 hover:bg-emerald-400/5 transition-colors">
+                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        <i class="fas fa-cube text-emerald-400"></i> Diseño 3D & VR
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-darkBg border border-emerald-400/30 rounded-full text-sm text-emerald-400 font-mono">Autodesk Fusion</span>
+                        <span class="px-4 py-2 bg-darkBg border border-emerald-400/30 rounded-full text-sm text-emerald-400 font-mono"><i class="fab fa-unity mr-2"></i>Unity</span>
+                        <span class="px-4 py-2 bg-darkBg border border-emerald-400/30 rounded-full text-sm text-emerald-400 font-mono">Meshmixer</span>
+                        <span class="px-4 py-2 bg-darkBg border border-emerald-400/30 rounded-full text-sm text-emerald-400 font-mono">Impresión 3D</span>
+                    </div>
+                </div>
+
+                <!-- Conocimiento Clínico -->
+                <div class="glass-card p-8 rounded-2xl border-l-4 border-l-purple-400 hover:bg-purple-400/5 transition-colors">
+                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        <i class="fas fa-stethoscope text-purple-400"></i> Conocimiento Clínico
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-darkBg border border-purple-400/30 rounded-full text-sm text-purple-400 font-mono">Cirugía Robótica (Da Vinci)</span>
+                        <span class="px-4 py-2 bg-darkBg border border-purple-400/30 rounded-full text-sm text-purple-400 font-mono">TAC & RM</span>
+                        <span class="px-4 py-2 bg-darkBg border border-purple-400/30 rounded-full text-sm text-purple-400 font-mono">Rayos X</span>
+                        <span class="px-4 py-2 bg-darkBg border border-purple-400/30 rounded-full text-sm text-purple-400 font-mono">Electromedicina</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Educación y Experiencia Adicional -->
+    <section id="educacion" class="py-24 bg-slate-900/50 relative z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- Educación -->
+                <div class="reveal">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="h-1 w-12 bg-blueAccent rounded"></div>
+                        <h2 class="text-3xl font-bold">Educación y Certificados</h2>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="glass-card p-8 rounded-2xl flex flex-col sm:flex-row gap-6 items-center">
+                            <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center p-2 shadow-[0_0_20px_rgba(255,255,255,0.1)] flex-shrink-0">
+                                <span class="text-darkBg font-black text-3xl tracking-tighter">UFV</span>
+                            </div>
+                            <div class="text-center sm:text-left">
+                                <h3 class="text-xl font-bold text-white mb-1">Grado en Ingeniería Biomédica</h3>
+                                <p class="text-cyanAccent text-sm font-medium mb-3">+ Diploma en Emprendimiento, Innovación y Transferencia Tecnológica</p>
+                                <p class="text-gray-400 text-sm"><i class="fas fa-university mr-2"></i>Universidad Francisco de Vitoria (2023 - 2027)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-6 rounded-2xl border-l-4 border-l-yellow-400">
+                            <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fas fa-award text-yellow-400"></i> Certificaciones y Logros</h4>
+                            <ul class="text-gray-400 text-sm space-y-2">
+                                <li><i class="fas fa-check text-cyanAccent mr-2"></i><strong>B2 First</strong> (Inglés - Competencia Profesional)</li>
+                                <li><i class="fas fa-check text-cyanAccent mr-2"></i><strong>Parlamento Xove</strong> (Ediciones 2022 y 2023)</li>
+                                <li><i class="fas fa-check text-cyanAccent mr-2"></i><strong>Sekmun</strong> (Modelo de Naciones Unidas)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experiencia Adicional -->
+                <div class="reveal" style="transition-delay: 200ms;">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="h-1 w-12 bg-gray-500 rounded"></div>
+                        <h2 class="text-3xl font-bold">Experiencia Adicional</h2>
+                    </div>
+                    
+                    <div class="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div class="glass-card p-5 rounded-xl border-l-2 border-l-purple-500 flex gap-4 items-start">
+                            <div class="p-3 bg-purple-500/10 rounded-full text-purple-500 mt-1"><i class="fas fa-hands-helping"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Asistente de Inclusión</h4>
+                                <p class="text-cyanAccent text-xs mb-1">Fundación Nantik Lum | Sep 2024 - Abr 2025</p>
+                                <p class="text-gray-400 text-sm">Acompañamiento para la inclusión social e intelectual de personas con necesidades especiales.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-xl border-l-2 border-l-blue-400 flex gap-4 items-start">
+                            <div class="p-3 bg-blue-400/10 rounded-full text-blue-400 mt-1"><i class="fas fa-water"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Instructor de Surf</h4>
+                                <p class="text-cyanAccent text-xs mb-1">Grove Surf Club | Jun 2024 - Sep 2025</p>
+                                <p class="text-gray-400 text-sm">Enseñanza y acompañamiento. Orientación al cliente y adaptación a diversas necesidades.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-xl border-l-2 border-l-orange-400 flex gap-4 items-start">
+                            <div class="p-3 bg-orange-400/10 rounded-full text-orange-400 mt-1"><i class="fas fa-hammer"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Peón de Fábrica</h4>
+                                <p class="text-cyanAccent text-xs mb-1">POMASA | Jul - Ago (2022, 2023, 2024)</p>
+                                <p class="text-gray-400 text-sm">Funciones de carpintería, ejecutando tareas de forma sobresaliente y desarrollando habilidades de trabajo en equipo.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-xl border-l-2 border-l-green-400 flex gap-4 items-start">
+                            <div class="p-3 bg-green-400/10 rounded-full text-green-400 mt-1"><i class="fas fa-table-tennis"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Instructor de Tenis</h4>
+                                <p class="text-cyanAccent text-xs mb-1">Club De Tenis Pontevedra | Jun 2021 - Jul 2022</p>
+                                <p class="text-gray-400 text-sm">Impartición de clases de tenis y acompañamiento deportivo a grupos infantiles de entre 6 y 12 años.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-xl border-l-2 border-l-pink-400 flex gap-4 items-start">
+                            <div class="p-3 bg-pink-400/10 rounded-full text-pink-400 mt-1"><i class="fas fa-theater-masks"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Actor</h4>
+                                <p class="text-cyanAccent text-xs mb-1">Miranda Producciones | Jul 2017 - Ago 2017</p>
+                                <p class="text-gray-400 text-sm">Interpretación en el papel de Moncho, el hijo de Castelao.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-darkBg py-10 border-t border-gray-800 relative z-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold text-white mb-6">¿Conectamos?</h2>
+            <div class="flex justify-center gap-6 mb-8">
+                <a href="mailto:medialdeamozosvictor@gmail.com" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-cyanAccent/10 group transition-all text-gray-400 hover:text-cyanAccent">
+                    <i class="fas fa-envelope text-xl"></i>
+                </a>
+                <a href="https://linkedin.com/in/victor-medialdea-mozos-437b14396" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-blueAccent/10 group transition-all text-gray-400 hover:text-blueAccent">
+                    <i class="fab fa-linkedin-in text-xl"></i>
+                </a>
+            </div>
+            <p class="text-gray-600 text-sm">
+                &copy; 2026 Víctor Medialdea Mozos. Portfolio interactivo de Ingeniería Biomédica.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Lógica JavaScript (Interacciones y Canvas) -->
+    <script>
+        // 1. Animaciones on Scroll (Intersection Observer)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Solo animar una vez
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 2. Fondo de Partículas Interactivos (Efecto Neuronal/Tecnológico)
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Seguir al ratón
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        class Particle {
+            constructor(x, y, vx, vy, size) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.size = size;
+                this.baseX = this.x;
+                this.baseY = this.y;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(6, 182, 212, 0.5)'; // Color CyanAccent
+                ctx.fill();
+            }
+
+            update() {
+                // Movimiento natural
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+
+                // Interacción con el ratón
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        
+                        this.x -= forceDirectionX * force * 3;
+                        this.y -= forceDirectionY * force * 3;
+                    }
+                }
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            // Determinar número de partículas por ancho de pantalla
+            const numParticles = (canvas.width * canvas.height) / 15000;
+            for (let i = 0; i < numParticles; i++) {
+                let size = Math.random() * 2 + 1;
+                let x = Math.random() * innerWidth;
+                let y = Math.random() * innerHeight;
+                let vx = (Math.random() - 0.5) * 1;
+                let vy = (Math.random() - 0.5) * 1;
+                particles.push(new Particle(x, y, vx, vy, size));
+            }
+        }
+
+        function connect() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 120) {
+                        ctx.strokeStyle = `rgba(6, 182, 212, ${1 - distance/120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+            }
+            connect();
+        }
+
+        // Iniciar todo al cargar la ventana
+        window.onload = function() {
+            initParticles();
+            animate();
+        };
+
+        // Scroll dinámico para la barra de navegación
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-lg');
+                nav.style.background = 'rgba(11, 17, 32, 0.9)';
+            } else {
+                nav.classList.remove('shadow-lg');
+                nav.style.background = 'rgba(11, 17, 32, 0.7)';
+            }
+        });
+    </script>
+</body>
+</html>
